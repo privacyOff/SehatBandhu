@@ -1,0 +1,25 @@
+name: sehat_bandhu
+publish_to: 'none'
+version: 0.1.0+1
+
+environment:
+  sdk: '>=3.3.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_riverpod: ^2.5.1
+  supabase_flutter: ^2.6.0
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+  jitsi_meet_flutter_sdk: ^10.0.0
+  connectivity_plus: ^6.0.5
+  intl: ^0.19.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
