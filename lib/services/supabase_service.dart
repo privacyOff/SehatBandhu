@@ -8,8 +8,8 @@ final supabaseClientProvider = Provider<SupabaseClient>((ref) {
 class SupabaseService {
   static Future<void> initialize() async {
     await Supabase.initialize(
-      url: 'YOUR_SUPABASE_URL',
-      anonKey: 'YOUR_SUPABASE_ANON_KEY',
+      url: 'https://oxgvdicgxveteaddcqpe.supabase.co',
+      anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im94Z3ZkaWNneHZldGVhZGRjcXBlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzMzEyNDcsImV4cCI6MjA4ODkwNzI0N30.GkFaioqfEJrTRkmPsShfbvcb8WPrrXY9CyWehwVPfHc',
     );
   }
 }
