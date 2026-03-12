@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../services/appointment_service.dart';
 import '../consultation/video_call_screen.dart';
 
-class BookAppointmentScreen extends ConsumerStatefulWidget {
+class BookAppointmentScreen extends StatefulWidget {
   const BookAppointmentScreen({
     required this.doctorId,
     required this.doctorName,
@@ -15,13 +13,11 @@ class BookAppointmentScreen extends ConsumerStatefulWidget {
   final String doctorName;
 
   @override
-  ConsumerState<BookAppointmentScreen> createState() =>
-      _BookAppointmentScreenState();
+  State<BookAppointmentScreen> createState() => _BookAppointmentScreenState();
 }
 
-class _BookAppointmentScreenState extends ConsumerState<BookAppointmentScreen> {
+class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
   DateTime _selectedDate = DateTime.now().add(const Duration(days: 1));
-  bool _loading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -32,28 +28,19 @@ class _BookAppointmentScreenState extends ConsumerState<BookAppointmentScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              widget.doctorName,
-              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-            Text('Choose a date and confirm your visit.',
-                style: Theme.of(context).textTheme.bodyLarge),
-            const SizedBox(height: 18),
+            Text(widget.doctorName,
+                style:
+                    const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 16),
             ListTile(
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(12),
                 side: const BorderSide(color: Colors.black26),
               ),
-              tileColor: Colors.white,
-              contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               leading: const Icon(Icons.calendar_month, size: 32),
-              title: const Text('Appointment Date'),
-              subtitle: Text(
+              title: Text(
                 '${_selectedDate.day}-${_selectedDate.month}-${_selectedDate.year}',
-                style:
-                    const TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                style: const TextStyle(fontSize: 20),
               ),
               onTap: _pickDate,
             ),
@@ -62,15 +49,9 @@ class _BookAppointmentScreenState extends ConsumerState<BookAppointmentScreen> {
               width: double.infinity,
               height: 60,
               child: ElevatedButton.icon(
-                onPressed: _loading ? null : _bookAndNavigate,
-                icon: _loading
-                    ? const SizedBox(
-                        width: 18,
-                        height: 18,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      )
-                    : const Icon(Icons.check_circle),
-                label: Text(_loading ? 'Booking...' : 'Book & Join'),
+                onPressed: _bookAndNavigate,
+                icon: const Icon(Icons.check_circle),
+                label: const Text('Book & Join'),
               ),
             ),
           ],
@@ -92,37 +73,16 @@ class _BookAppointmentScreenState extends ConsumerState<BookAppointmentScreen> {
     }
   }
 
-  Future<void> _bookAndNavigate() async {
-    setState(() => _loading = true);
-    try {
-      final appointment = await ref.read(appointmentServiceProvider).bookAppointment(
-            doctorId: widget.doctorId,
-            scheduledAt: _selectedDate,
-          );
-
-      if (appointment == null) {
-        _showMessage('Please login first to create an appointment.');
-        return;
-      }
-
-      if (!mounted) return;
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (_) => VideoCallScreen(
-            meetingLink: appointment.meetingLink,
-            userDisplayName: 'Patient',
-          ),
+  void _bookAndNavigate() {
+    const demoMeetingLink = 'sehatbandhu-demo-room';
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => const VideoCallScreen(
+          meetingLink: demoMeetingLink,
+          userDisplayName: 'Patient',
         ),
-      );
-    } catch (error) {
-      _showMessage('Booking failed: $error');
-    } finally {
-      if (mounted) setState(() => _loading = false);
-    }
-  }
-
-  void _showMessage(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+      ),
+    );
   }
 }

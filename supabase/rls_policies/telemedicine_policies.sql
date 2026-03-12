@@ -23,12 +23,6 @@ on public.users for update
 using (id = auth.uid() or public.current_user_role() = 'admin')
 with check (id = auth.uid() or public.current_user_role() = 'admin');
 
-
-create policy "users can insert own profile"
-on public.users for insert
-to authenticated
-with check (id = auth.uid());
-
 -- DOCTORS
 create policy "doctors profile readable for authenticated"
 on public.doctors for select
@@ -132,15 +126,10 @@ create policy "doctor upload patient files"
 on storage.objects for insert
 with check (
   bucket_id = 'medical-files'
-  and (
-    public.current_user_role() = 'admin'
-    or (
-      public.current_user_role() = 'doctor'
-      and exists (
-        select 1 from public.appointments a
-        where a.doctor_id = auth.uid()
-          and a.patient_id::text = (storage.foldername(name))[1]
-      )
-    )
+  and public.current_user_role() in ('doctor', 'admin')
+  and exists (
+    select 1 from public.appointments a
+    where a.doctor_id = auth.uid()
+      and a.patient_id::text = (storage.foldername(name))[1]
   )
 );

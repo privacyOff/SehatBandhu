@@ -1,10 +1,5 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-
-const _supabaseUrl = String.fromEnvironment('SUPABASE_URL', defaultValue: '');
-const _supabaseAnonKey =
-    String.fromEnvironment('SUPABASE_ANON_KEY', defaultValue: '');
 
 final supabaseClientProvider = Provider<SupabaseClient>((ref) {
   return Supabase.instance.client;
@@ -12,19 +7,9 @@ final supabaseClientProvider = Provider<SupabaseClient>((ref) {
 
 class SupabaseService {
   static Future<void> initialize() async {
-    if (_supabaseUrl.isEmpty || _supabaseAnonKey.isEmpty) {
-      debugPrint(
-        '[Supabase] Missing config. Pass --dart-define=SUPABASE_URL=... and --dart-define=SUPABASE_ANON_KEY=...',
-      );
-      throw StateError('Supabase credentials are missing');
-    }
-
     await Supabase.initialize(
-      url: _supabaseUrl,
-      anonKey: _supabaseAnonKey,
-      debug: kDebugMode,
+      url: 'https://oxgvdicgxveteaddcqpe.supabase.co',
+      anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im94Z3ZkaWNneHZldGVhZGRjcXBlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzMzEyNDcsImV4cCI6MjA4ODkwNzI0N30.GkFaioqfEJrTRkmPsShfbvcb8WPrrXY9CyWehwVPfHc',
     );
-
-    debugPrint('[Supabase] init completed for $_supabaseUrl');
   }
 }
